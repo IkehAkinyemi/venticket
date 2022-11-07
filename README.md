@@ -1,1 +1,3 @@
 # Venticket🏕️ 
+
+Venticket🏕️ is an event management platform that allows users to book tickets for events all over the world. With MyEvents, you will be able to book tickets for yourself and your peers for concerts, carnivals, circuses, and more. MyEvents will keep a record of the bookings, the users, and the different locations where the events are taking place. It will manage your reservations efficiently.
