@@ -1,3 +1,5 @@
-module github.com/IkehAkinyemi/venticket
+module github.com/ikehakinyemi/ventickets
 
 go 1.19
+
+require github.com/streadway/amqp v1.0.0 // indirect
