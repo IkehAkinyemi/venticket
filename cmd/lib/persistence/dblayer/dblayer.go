@@ -14,7 +14,6 @@ const (
 )
 
 func NewPersistenceLayer(options DBTYPE, connection string) (persistence.DatabaseHandler, error) {
-
 	switch options {
 	case MONGODB:
 		return mongolayer.NewMongoDBLayer(connection)

@@ -3,6 +3,7 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence/dblayer"
@@ -23,7 +24,6 @@ type ServiceConfig struct {
 }
 
 func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error) {
-	fmt.Println("Got here")
 	conf := ServiceConfig{
 		DBTypeDefault,
 		DBConnectionDefault,
@@ -42,8 +42,14 @@ func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error
 		conf.DBConnection = connStr
 	}
 
-	fmt.Println(conf.DBConnection)
-
 	err = json.NewDecoder(file).Decode(&conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if connStr != "" {
+		conf.DBConnection = connStr
+	}
+
 	return conf, err
 }
