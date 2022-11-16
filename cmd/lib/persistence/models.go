@@ -17,28 +17,28 @@ func (u *User) String() string {
 }
 
 type Booking struct {
-	Date    int64
+	Date    int64  `json:"date,omitempty"`
 	EventID []byte
-	Seats   int
+	Seats   int    `json:"seats,omitempty"`
 }
 
 type Event struct {
 	ID        interface{} `bson:"_id"`
-	Name      string
-	Duration  int
-	StartDate int64
-	EndDate   int64
-	Location  Location
+	Name      string      `json:"name,omitempty"`
+	Duration  int         `json:"duration,omitempty"`
+	StartDate int64       `json:"start_date,omitempty"`
+	EndDate   int64       `json:"end_date,omitempty"`
+	Location  Location    `json:"location,omitempty"`
 }
 
 type Location struct {
 	ID        interface{} `bson:"_id"`
-	Name      string
-	Address   string
-	Country   string
-	OpenTime  int
-	CloseTime int
-	Halls     []Hall
+	Name      string      `json:"name,omitempty"`
+	Address   string      `json:"address,omitempty"`
+	Country   string      `json:"country,omitempty"`
+	OpenTime  int         `json:"open_time,omitempty"`
+	CloseTime int         `json:"close_time,omitempty"`
+	Halls     []Hall      `json:"halls,omitempty"`
 }
 
 type Hall struct {

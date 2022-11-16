@@ -34,7 +34,7 @@ func (a *AMQPEventEmitter) setup() error {
 	return channel.ExchangeDeclare("events", "topic", true, false, false, false, nil)
 }
 
-func (a * AMQPEventEmitter) Emit(event msgqueue.Event) error {
+func (a *AMQPEventEmitter) Emit(event msgqueue.Event) error {
 	wireData, err := json.Marshal(event)
 	if err != nil {
 		return err
@@ -46,9 +46,9 @@ func (a * AMQPEventEmitter) Emit(event msgqueue.Event) error {
 	}
 	defer channel.Close()
 
-	msg := amqp.Publishing {
-		Headers: amqp.Table{"x-event-name": event.EventName()},
-		Body: wireData,
+	msg := amqp.Publishing{
+		Headers:     amqp.Table{"x-event-name": event.EventName()},
+		Body:        wireData,
 		ContentType: "application/json",
 	}
 

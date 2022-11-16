@@ -38,7 +38,7 @@ func (dbLayer *MongoDBLayer) AddEvent(e persistence.Event) ([]byte, error) {
 
 func (dbLayer *MongoDBLayer) FindEvent(id string) (*persistence.Event, error) {
 	var event persistence.Event
-	filter := bson.D{{Key:"_id", Value: id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 

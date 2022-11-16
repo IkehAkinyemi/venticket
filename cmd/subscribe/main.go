@@ -29,12 +29,11 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-
 	msgs, err := channel.Consume("my_queue", "", false, false, false, false, nil)
 	if err != nil {
 		panic("error while consuming message: " + err.Error())
 	}
-	
+
 	for msg := range msgs {
 		fmt.Println("" + string(msg.Body))
 	}

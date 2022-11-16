@@ -1,6 +1,28 @@
 {
-    "databasetype" : "mongodb",
-    "dbconnection": "",
-    "restfulapi_endpoint": "localhost:8181",
-    "restfulapi-tlsendpoint": "localhost:9191"
+  "databasetype": "mongodb",
+  "dbconnection": "",
+  "restfulapi_endpoint": "localhost:8181",
+  "restfulapi-tlsendpoint": "localhost:9191",
+  "event": {
+    "id": "",
+    "name": "string",
+    "duration": 1,
+    "start_date": 1220,
+    "end_date": 64,
+    "location": {
+      "id": "",
+      "name": "string",
+      "address": "string",
+      "country": "string",
+      "open_time": 12,
+      "close_time": 12,
+      "halls": [
+        {
+          "name": "string",
+          "location": "string",
+          "capacity": 12
+        }
+      ]
+    }
+  }
 }

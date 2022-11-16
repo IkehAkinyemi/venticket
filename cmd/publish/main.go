@@ -23,7 +23,7 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	message := amqp.Publishing {
+	message := amqp.Publishing{
 		Body: []byte("Hellow world"),
 	}
 

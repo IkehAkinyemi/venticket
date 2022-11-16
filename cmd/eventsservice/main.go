@@ -24,9 +24,8 @@ func main() {
 	}
 	defer dbhandler.Close()
 
-	
 	log.Println("Database connection successful... ")
-	
+
 	//RESTful API start
 	httpErrChan, httptlsErrChan := rest.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndPint, dbhandler)
 	select {
