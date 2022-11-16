@@ -22,7 +22,8 @@ type ServiceConfig struct {
 	RestfulTLSEndPint string         `json:"restfulapi-tlsendpoint"`
 }
 
-func ExtractConfiguration(filename string) (ServiceConfig, error) {
+func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error) {
+	fmt.Println("Got here")
 	conf := ServiceConfig{
 		DBTypeDefault,
 		DBConnectionDefault,
@@ -35,6 +36,13 @@ func ExtractConfiguration(filename string) (ServiceConfig, error) {
 		fmt.Println("Configuration file not found. Continuing with default values.")
 		return conf, err
 	}
+	defer file.Close()
+
+	if connStr != "" {
+		conf.DBConnection = connStr
+	}
+
+	fmt.Println(conf.DBConnection)
 
 	err = json.NewDecoder(file).Decode(&conf)
 	return conf, err

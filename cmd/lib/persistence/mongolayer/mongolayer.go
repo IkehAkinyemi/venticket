@@ -1,69 +1,51 @@
 package mongolayer
 
 import (
+	"context"
+	"log"
+	"time"
+
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence"
-
-	mgo "gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
-)
-
-const (
-	DB     = "myevents"
-	USERS  = "users"
-	EVENTS = "events"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MongoDBLayer struct {
-	session *mgo.Session
+	client *mongo.Client
 }
 
 func NewMongoDBLayer(connection string) (persistence.DatabaseHandler, error) {
-	s, err := mgo.Dial(connection)
+	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().
+		ApplyURI(connection).
+		SetServerAPIOptions(serverAPIOptions)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check the connection
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return &MongoDBLayer{
-		session: s,
+		client: client,
 	}, err
 }
 
-func (mgoLayer *MongoDBLayer) AddEvent(e persistence.Event) ([]byte, error) {
-	s := mgoLayer.getFreshSession()
-	defer s.Close()
+// Close Database connection resource
+func (dbLayer *MongoDBLayer) Close() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	if !e.ID.Valid() {
-		e.ID = bson.NewObjectId()
+	err := dbLayer.client.Disconnect(ctx)
+	if err != nil {
+		panic("Error during closing of DB connection")
 	}
-
-	if e.Location.ID.Valid() {
-		e.Location.ID = bson.NewObjectId()
-	}
-
-	return []byte(e.ID), s.DB(DB).C(EVENTS).Insert(e)
-}
-
-func (mgoLayer *MongoDBLayer) FindEvent(id []byte) (persistence.Event, error) {
-	s := mgoLayer.getFreshSession()
-	defer s.Close()
-	e := persistence.Event{}
-
-	err := s.DB(DB).C(EVENTS).FindId(bson.ObjectId(id)).One(&e)
-	return e, err
-}
-
-func (mgoLayer *MongoDBLayer) FindEventByName(name string) (persistence.Event, error) {
-	s := mgoLayer.getFreshSession()
-	defer s.Close()
-	e := persistence.Event{}
-	err := s.DB(DB).C(EVENTS).Find(bson.M{"name": name}).One(&e)
-	return e, err
-}
-
-func (mgoLayer *MongoDBLayer) FindAllAvailableEvents() ([]persistence.Event, error) {
-	s := mgoLayer.getFreshSession()
-	defer s.Close()
-	events := []persistence.Event{}
-	err := s.DB(DB).C(EVENTS).Find(nil).All(&events)
-	return events, err
-}
-
-func (mgoLayer *MongoDBLayer) getFreshSession() *mgo.Session {
-	return mgoLayer.session.Copy()
 }

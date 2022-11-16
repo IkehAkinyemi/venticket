@@ -2,12 +2,10 @@ package persistence
 
 import (
 	"fmt"
-
-	"gopkg.in/mgo.v2/bson"
 )
 
 type User struct {
-	ID       bson.ObjectId `bson:"_id"`
+	ID       interface{} `bson:"_id"`
 	First    string
 	Last     string
 	Age      int
@@ -25,7 +23,7 @@ type Booking struct {
 }
 
 type Event struct {
-	ID        bson.ObjectId `bson:"_id"`
+	ID        interface{} `bson:"_id"`
 	Name      string
 	Duration  int
 	StartDate int64
@@ -34,7 +32,7 @@ type Event struct {
 }
 
 type Location struct {
-	ID        bson.ObjectId `bson:"_id"`
+	ID        interface{} `bson:"_id"`
 	Name      string
 	Address   string
 	Country   string

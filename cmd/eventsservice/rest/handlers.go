@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -42,17 +41,13 @@ func (eh *eventServiceHandler) FindEventHandler(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	var event persistence.Event
+	var event *persistence.Event
 	var err error
 	switch strings.ToLower(criteria) {
 	case "name":
 		event, err = eh.dbhandler.FindEventByName(searchkey)
 	case "id":
-		var id []byte
-		id, err = hex.DecodeString(searchkey)
-		if err == nil {
-			event, err = eh.dbhandler.FindEvent(id)
-		}
+		event, err = eh.dbhandler.FindEvent(searchkey)
 	}
 	if err != nil {
 		fmt.Fprintf(w, `{"error": "%s"}`, err)
