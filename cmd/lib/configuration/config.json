@@ -4,21 +4,21 @@
   "restfulapi_endpoint": "localhost:8181",
   "restfulapi-tlsendpoint": "localhost:9191",
   "event": {
-    "name": "Nora Uma",
-    "duration": 2016,
-    "start_date": 107,
-    "end_date": 107,
+    "name": "opera aida",
+    "duration": 120,
+    "start_date": 768346784368,
+    "end_date": 43988943,
     "location": {
-      "name": "Got here",
-      "address": "Happy street",
-      "country": "Nigeria",
-      "open_time": 23452,
-      "close_time": 2133445,
+      "name": "west street Opera House",
+      "address": "11 west street, AZ 73646",
+      "country": "U.S.A",
+      "open_time": 7,
+      "close_time": 20,
       "halls": [
         {
-          "name": "Hello People",
-          "location": "Downtown abbey",
-          "capacity": 1234567
+          "name": "Cesar hall",
+          "location": "second floor, room 2210",
+          "capacity": 2000
         }
       ]
     }
