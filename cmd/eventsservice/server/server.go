@@ -1,15 +1,16 @@
-package rest
+package server
 
 import (
 	"net/http"
 
+	"github.com/ikehakinyemi/ventickets/cmd/lib/msgqueue"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence"
 
 	"github.com/gorilla/mux"
 )
 
-func ServeAPI(endpoint, tlsendpoint string, databasehandler persistence.DatabaseHandler) (chan error, chan error) {
-	handler := NewEventHandler(databasehandler)
+func ServeAPI(endpoint, tlsendpoint string, databasehandler persistence.DatabaseHandler, emitter msgqueue.EventEmitter) (chan error, chan error) {
+	handler := NewEventHandler(databasehandler, emitter)
 	r := mux.NewRouter()
 	eventsrouter := r.PathPrefix("/events").Subrouter()
 	eventsrouter.Methods("GET").Path("/{SearchCriteria}/{search}").HandlerFunc(handler.FindEventHandler)
@@ -19,7 +20,7 @@ func ServeAPI(endpoint, tlsendpoint string, databasehandler persistence.Database
 	httptlsErrChan := make(chan error)
 
 	go func() {
-		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "cert.pem", "key.pem", r)
+		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "./cmd/eventsservice/cert.pem", "./cmd/eventsservice/key.pem", r)
 	}()
 	go func() {
 		httpErrChan <- http.ListenAndServe(endpoint, r)

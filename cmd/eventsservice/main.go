@@ -4,9 +4,11 @@ import (
 	"flag"
 	"log"
 
-	"github.com/ikehakinyemi/ventickets/cmd/eventsservice/rest"
+	"github.com/ikehakinyemi/ventickets/cmd/eventsservice/server"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/configuration"
+	msgqueue_amqp "github.com/ikehakinyemi/ventickets/cmd/lib/msgqueue/amqp"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence/dblayer"
+	"github.com/streadway/amqp"
 )
 
 func main() {
@@ -16,6 +18,19 @@ func main() {
 
 	//extract configuration
 	config, _ := configuration.ExtractConfiguration(*confPath, *connStrDB)
+
+	log.Println("Connecting to AMQP Broker...")
+	conn, err := amqp.Dial(config.AMQPMessageBroker)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	//setup dependency injection for AMQP
+	emitter, err := msgqueue_amqp.NewAMQPEventEmitter(conn)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Println("Connecting to database")
 	dbhandler, err := dblayer.NewPersistenceLayer(config.Databasetype, config.DBConnection)
@@ -27,7 +42,7 @@ func main() {
 	log.Println("Database connection successful... ")
 
 	//RESTful API start
-	httpErrChan, httptlsErrChan := rest.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndPint, dbhandler)
+	httpErrChan, httptlsErrChan := server.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndPint, dbhandler, emitter)
 	select {
 	case err := <-httpErrChan:
 		log.Fatal("HTTP Error: ", err)

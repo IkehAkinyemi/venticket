@@ -2,10 +2,12 @@ package persistence
 
 import (
 	"fmt"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
-	ID       interface{} `bson:"_id"`
+	ID       primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	First    string
 	Last     string
 	Age      int
@@ -23,7 +25,7 @@ type Booking struct {
 }
 
 type Event struct {
-	ID        interface{} `bson:"_id"`
+	ID       primitive.ObjectID `bson:"_id"`
 	Name      string      `json:"name,omitempty"`
 	Duration  int         `json:"duration,omitempty"`
 	StartDate int64       `json:"start_date,omitempty"`
@@ -32,7 +34,6 @@ type Event struct {
 }
 
 type Location struct {
-	ID        interface{} `bson:"_id"`
 	Name      string      `json:"name,omitempty"`
 	Address   string      `json:"address,omitempty"`
 	Country   string      `json:"country,omitempty"`

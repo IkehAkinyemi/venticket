@@ -2,38 +2,32 @@ package mongolayer
 
 import (
 	"context"
-	"errors"
-	"log"
 	"time"
 
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	DB     = "ventickets"
+	DB     = "venticket"
 	USERS  = "users"
 	EVENTS = "events"
 )
 
-func (dbLayer *MongoDBLayer) AddEvent(e persistence.Event) ([]byte, error) {
+func (dbLayer *MongoDBLayer) AddEvent(e persistence.Event) (interface{}, error) {
 	collection := dbLayer.client.Database(DB).Collection(EVENTS)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	e.ID = primitive.NewObjectID()
 	result, err := collection.InsertOne(ctx, e)
 	if err != nil {
 		return nil, err
 	}
 
-	insertID, ok := result.InsertedID.(string)
-	if !ok {
-		log.Fatal(insertID)
-		return nil, errors.New("Type assertion failed")
-	}
-
-	return []byte(insertID), err
+	return result.InsertedID, err
 }
 
 func (dbLayer *MongoDBLayer) FindEvent(id string) (*persistence.Event, error) {

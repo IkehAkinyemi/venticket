@@ -4,23 +4,21 @@
   "restfulapi_endpoint": "localhost:8181",
   "restfulapi-tlsendpoint": "localhost:9191",
   "event": {
-    "id": "",
-    "name": "string",
-    "duration": 1,
-    "start_date": 1220,
-    "end_date": 64,
+    "name": "Nora Uma",
+    "duration": 2016,
+    "start_date": 107,
+    "end_date": 107,
     "location": {
-      "id": "",
-      "name": "string",
-      "address": "string",
-      "country": "string",
-      "open_time": 12,
-      "close_time": 12,
+      "name": "Got here",
+      "address": "Happy street",
+      "country": "Nigeria",
+      "open_time": 23452,
+      "close_time": 2133445,
       "halls": [
         {
-          "name": "string",
-          "location": "string",
-          "capacity": 12
+          "name": "Hello People",
+          "location": "Downtown abbey",
+          "capacity": 1234567
         }
       ]
     }

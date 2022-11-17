@@ -14,6 +14,7 @@ var (
 	DBConnectionDefault = "mongodb://127.0.0.1"
 	RestfulEPDefault    = "localhost:8181"
 	RestfulTLSEPDefault = "localhost:9191"
+	AMQPMessageBroker = "amqp://guest:guest@localhost:5672"
 )
 
 type ServiceConfig struct {
@@ -21,6 +22,7 @@ type ServiceConfig struct {
 	DBConnection      string         `json:"dbconnection"`
 	RestfulEndpoint   string         `json:"restfulapi_endpoint"`
 	RestfulTLSEndPint string         `json:"restfulapi-tlsendpoint"`
+	AMQPMessageBroker string `json:"amqp_message_broker"`
 }
 
 func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error) {
@@ -29,6 +31,7 @@ func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error
 		DBConnectionDefault,
 		RestfulEPDefault,
 		RestfulTLSEPDefault,
+		AMQPMessageBroker,
 	}
 
 	file, err := os.Open(filename)
@@ -45,6 +48,10 @@ func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error
 	err = json.NewDecoder(file).Decode(&conf)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if broker := os.Getenv("AMQP_URL"); broker != "" {
+		conf.AMQPMessageBroker = broker
 	}
 
 	if connStr != "" {
