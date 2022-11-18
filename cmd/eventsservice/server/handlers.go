@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
+	"github.com/ikehakinyemi/ventickets/cmd/contracts"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/msgqueue"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -98,6 +100,16 @@ func (eh *eventServiceHandler) NewEventHandler(w http.ResponseWriter, r *http.Re
 		fmt.Fprintln(w, `{"error": "internal server error}`)
 		return
 	}
+
+	msg := contracts.EventCreatedEvent {
+		ID: eventID.Hex(),
+		Name: event.Name,
+		LocationName: event.Location.Name,
+		Start: time.Unix(event.StartDate, 0),
+		End: time.Unix(event.EndDate, 0),
+	}
+
+	eh.eventEmitter.Emit(&msg)
 
 	fmt.Fprintf(w, `{"id":%q}`, eventID.Hex())
 }
