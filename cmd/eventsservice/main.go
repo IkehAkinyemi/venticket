@@ -32,14 +32,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Connecting to database")
+	log.Println("Connecting to database...")
 	dbhandler, err := dblayer.NewPersistenceLayer(config.Databasetype, config.DBConnection)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer dbhandler.Close()
-
-	log.Println("Database connection successful... ")
+	log.Println("Database connection successful")
 
 	//RESTful API start
 	httpErrChan, httptlsErrChan := server.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndPint, dbhandler, emitter)

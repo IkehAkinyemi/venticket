@@ -5,5 +5,7 @@ type DatabaseHandler interface {
 	FindEvent(string) (*Event, error)
 	FindEventByName(string) (*Event, error)
 	FindAllAvailableEvents() ([]*Event, error)
+	AddLocation(Event)
+	AddBookingForUser([]byte, Booking)
 	Close()
 }

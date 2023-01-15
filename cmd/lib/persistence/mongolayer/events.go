@@ -21,7 +21,10 @@ func (dbLayer *MongoDBLayer) AddEvent(e persistence.Event) (interface{}, error) 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	e.ID = primitive.NewObjectID()
+	if e.ID == primitive.NilObjectID {
+		e.ID = primitive.NewObjectID()
+	}
+
 	result, err := collection.InsertOne(ctx, e)
 	if err != nil {
 		return nil, err
@@ -32,12 +35,18 @@ func (dbLayer *MongoDBLayer) AddEvent(e persistence.Event) (interface{}, error) 
 
 func (dbLayer *MongoDBLayer) FindEvent(id string) (*persistence.Event, error) {
 	var event persistence.Event
-	filter := bson.D{{Key: "_id", Value: id}}
+
+	objId, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return nil, err
+		}
+	filter := bson.D{{Key: "_id", Value: objId}}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	collection := dbLayer.client.Database(DB).Collection(EVENTS)
-	err := collection.FindOne(ctx, filter).Decode(&event)
+	err = collection.FindOne(ctx, filter).Decode(&event)
 	if err != nil {
 		return nil, err
 	}

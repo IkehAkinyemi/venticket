@@ -15,6 +15,8 @@ var (
 	RestfulEPDefault    = "localhost:8181"
 	RestfulTLSEPDefault = "localhost:9191"
 	AMQPMessageBroker = "amqp://guest:guest@localhost:5672"
+	MessageBrokerType = "kafka"
+	KafkaMessageBrokers = []string{"http://localhost:9092/"}
 )
 
 type ServiceConfig struct {
@@ -23,6 +25,8 @@ type ServiceConfig struct {
 	RestfulEndpoint   string         `json:"restfulapi_endpoint"`
 	RestfulTLSEndPint string         `json:"restfulapi-tlsendpoint"`
 	AMQPMessageBroker string `json:"amqp_message_broker"`
+	MessageBrokerType string `json:"message_broker_type"`
+	KafkaMessageBrokers []string `json:"kafka_message_brokers"`
 }
 
 func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error) {
@@ -32,6 +36,8 @@ func ExtractConfiguration(filename string, connStr string) (ServiceConfig, error
 		RestfulEPDefault,
 		RestfulTLSEPDefault,
 		AMQPMessageBroker,
+		MessageBrokerType,
+		KafkaMessageBrokers,
 	}
 
 	file, err := os.Open(filename)

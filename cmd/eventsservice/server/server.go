@@ -6,6 +6,7 @@ import (
 	"github.com/ikehakinyemi/ventickets/cmd/lib/msgqueue"
 	"github.com/ikehakinyemi/ventickets/cmd/lib/persistence"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -19,11 +20,10 @@ func ServeAPI(endpoint, tlsendpoint string, databasehandler persistence.Database
 	httpErrChan := make(chan error)
 	httptlsErrChan := make(chan error)
 
+	server := handlers.CORS()(r)
+
 	go func() {
-		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "./cmd/eventsservice/cert.pem", "./cmd/eventsservice/key.pem", r)
-	}()
-	go func() {
-		httpErrChan <- http.ListenAndServe(endpoint, r)
+		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "./cmd/eventsservice/cert.pem", "./cmd/eventsservice/key.pem", server)
 	}()
 
 	return httpErrChan, httptlsErrChan

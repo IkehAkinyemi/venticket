@@ -11,7 +11,7 @@ type AMQPEventEmitter struct {
 	connection *amqp.Connection
 }
 
-func NewAMQPEventEmitter(conn *amqp.Connection) (msgqueue.EventEmitter, error) {
+func NewAMQPEventEmitter(conn *amqp.Connection, arr ...string) (msgqueue.EventEmitter, error) {
 	emitter := &AMQPEventEmitter{
 		connection: conn,
 	}

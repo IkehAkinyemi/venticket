@@ -26,7 +26,7 @@ func (a *AMQPEventListener) setup() error {
 	return err
 }
 
-func NewAMQPEventListener(conn *amqp.Connection, queue string) (msgqueue.EventListener, error) {
+func NewAMQPEventListener(conn *amqp.Connection, queue string, d ...string) (msgqueue.EventListener, error) {
 	listener := &AMQPEventListener{
 		connection: conn,
 		queue: queue,
